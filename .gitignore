@@ -1,0 +1,19 @@
+# 编译产物
+*.exe
+*.o
+*.obj
+*.out
+
+# 运行时数据文件
+books.txt
+videos.txt
+pics.txt
+
+# 编辑器 / IDE
+.vscode/
+.idea/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db
