@@ -3,93 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZXZ 的项目集合</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%232D5A4A'/%3E%3Ctext x='12' y='16' text-anchor='middle' fill='white' font-size='12' font-family='monospace'%3EZX%3C/text%3E%3C/svg%3E">
+<title>ZXZ · 项目集合</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%232D5A4A'/%3E%3Ctext x='12' y='17' text-anchor='middle' fill='white' font-size='12' font-family='monospace'%3EZX%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  min-height: 100vh;
   font-family: 'Noto Sans SC', -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: #F5F3EE;
   color: #1C2321;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  min-height: 100vh;
+  padding: 48px 24px 80px;
 }
-.wrap { width: 100%; max-width: 720px; }
-.head { margin-bottom: 36px; }
-.head .eyebrow {
-  font-size: 12px;
-  letter-spacing: 3px;
-  color: #9AA39E;
-  text-transform: uppercase;
-  margin-bottom: 8px;
+.wrap { max-width: 960px; margin: 0 auto; }
+
+/* ===== 头部 ===== */
+.head { margin-bottom: 28px; }
+.eyebrow {
+  font-size: 11px; letter-spacing: 3px; color: #9AA39E;
+  text-transform: uppercase; margin-bottom: 6px;
 }
 .head h1 {
   font-family: 'Noto Serif SC', serif;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 32px; font-weight: 900;
 }
 .head p {
-  color: #5A6560;
-  margin-top: 10px;
-  font-size: 14px;
+  color: #5A6560; font-size: 13.5px; margin-top: 6px;
 }
-.cards { display: grid; gap: 16px; }
-.card {
-  display: flex;
+
+/* ===== 工具栏 ===== */
+.toolbar {
+  display: flex; gap: 10px; margin: 24px 0 20px; flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
-  padding: 24px 28px;
+}
+.search {
+  flex: 1; min-width: 200px;
+  padding: 10px 14px;
+  border: 1px solid #E2DED3;
+  border-radius: 8px;
+  font-size: 14px; font-family: inherit;
+  background: #fff;
+}
+.search:focus { outline: none; border-color: #2D5A4A; }
+.filter-btn {
+  padding: 8px 16px;
+  border: 1px solid #E2DED3;
+  background: #fff;
+  border-radius: 20px;
+  font-size: 13px; font-family: inherit;
+  cursor: pointer; color: #5A6560;
+  transition: all .15s;
+}
+.filter-btn:hover { border-color: #2D5A4A; color: #2D5A4A; }
+.filter-btn.active {
+  background: #2D5A4A; color: #fff; border-color: #2D5A4A;
+}
+
+/* ===== 项目网格 ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.card {
+  display: flex; flex-direction: column;
+  padding: 20px;
   background: #fff;
   border: 1px solid #E2DED3;
-  border-radius: 12px;
-  text-decoration: none;
-  color: inherit;
+  border-radius: 10px;
+  text-decoration: none; color: inherit;
   transition: transform .15s, box-shadow .15s, border-color .15s;
 }
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(28,35,33,.08);
+  box-shadow: 0 6px 20px rgba(28,35,33,.08);
   border-color: #2D5A4A;
 }
 .card .icon {
-  width: 52px; height: 52px;
-  border-radius: 10px;
+  width: 40px; height: 40px;
+  border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  margin-bottom: 14px;
 }
-.card .icon svg { width: 26px; height: 26px; }
-.card.media .icon { background: #E3EBE6; color: #2D5A4A; }
-.card.pelican .icon { background: #F7EEDB; color: #B8862E; }
-.card.matrix .icon { background: #E0F5E5; color: #1F7A3D; }
-.card.clock .icon { background: #E8ECF5; color: #3A4A6B; }
-.card.sketch .icon { background: #FBE9DF; color: #C25A2E; }
-.card .info { flex: 1; }
+.card .icon svg { width: 22px; height: 22px; }
 .card .name {
   font-family: 'Noto Serif SC', serif;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px; font-weight: 700;
 }
 .card .desc {
-  font-size: 13px;
-  color: #5A6560;
-  margin-top: 4px;
+  font-size: 12.5px; color: #5A6560;
+  margin-top: 4px; line-height: 1.5;
+  flex: 1;
 }
-.card .arrow {
-  font-size: 20px;
-  color: #9AA39E;
-  transition: transform .15s, color .15s;
+.card .meta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid #F0EDE4;
 }
-.card:hover .arrow { transform: translateX(4px); color: #2D5A4A; }
+.tag {
+  font-size: 11px; padding: 2px 8px;
+  border-radius: 10px; font-weight: 500;
+}
+.tag.tool { background: #E3EBE6; color: #2D5A4A; }
+.tag.animation { background: #F7EEDB; color: #B8862E; }
+.card .go { font-size: 14px; color: #9AA39E; }
+.card:hover .go { color: #2D5A4A; }
+
+.empty {
+  text-align: center; padding: 60px 20px;
+  color: #9AA39E; font-size: 14px;
+}
+
+/* ===== 页脚 ===== */
 .foot {
-  margin-top: 32px;
-  font-size: 12px;
-  color: #9AA39E;
-  text-align: center;
+  margin-top: 40px; text-align: center;
+  font-size: 12px; color: #9AA39E;
+}
+.foot a { color: #9AA39E; text-decoration: none; }
+.foot a:hover { color: #2D5A4A; }
+
+@media (max-width: 600px) {
+  body { padding: 24px 16px 60px; }
+  .head h1 { font-size: 26px; }
 }
 </style>
 </head>
@@ -98,79 +133,111 @@ body {
   <div class="head">
     <div class="eyebrow">ZXZ · PROJECTS</div>
     <h1>项目集合</h1>
-    <p>同一个仓库里的小项目集合，点击进入。</p>
+    <p>同一个仓库里的小项目，点击进入。</p>
   </div>
-  <div class="cards">
-    <a class="card media" href="media-library.html">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/>
-          <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>
-        </svg>
-      </div>
-      <div class="info">
-        <div class="name">媒体库管理系统</div>
-        <div class="desc">图书 / 视频 / 图画的增删改查、统计与本地存储</div>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="card pelican" href="pelican.html">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M12 7v5l3 2"/>
-        </svg>
-      </div>
-      <div class="info">
-        <div class="name">鹈鹕扛车跑</div>
-        <div class="desc">SVG 2D 动画小剧场</div>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="card matrix" href="matrix-rain.html">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M7 4v16M12 4v16M17 4v16"/>
-          <path d="M7 8h.01M7 12h.01M12 10h.01M12 14h.01M17 6h.01M17 12h.01M17 16h.01"/>
-        </svg>
-      </div>
-      <div class="info">
-        <div class="name">黑客帝国数字雨</div>
-        <div class="desc">Canvas 字符流，鼠标划过扰动</div>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="card clock" href="clock.html">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M12 7v5l3 2"/>
-        </svg>
-      </div>
-      <div class="info">
-        <div class="name">实时时钟</div>
-        <div class="desc">大字体翻页，白天 / 黑夜自动换肤</div>
-      </div>
-      <div class="arrow">→</div>
-    </a>
-    <a class="card sketch" href="sketch-board.html">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 19l7-7 3 3-7 7-3-3z"/>
-          <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
-          <circle cx="11" cy="11" r="2"/>
-        </svg>
-      </div>
-      <div class="info">
-        <div class="name">画板涂鸦板</div>
-        <div class="desc">选色、粗细、橡皮擦、保存 PNG</div>
-      </div>
-      <div class="arrow">→</div>
-    </a>
+
+  <div class="toolbar">
+    <input type="search" class="search" id="search" placeholder="搜索项目…" oninput="render()">
+    <button class="filter-btn active" data-cat="all" onclick="setFilter('all', this)">全部</button>
+    <button class="filter-btn" data-cat="tool" onclick="setFilter('tool', this)">工具</button>
+    <button class="filter-btn" data-cat="animation" onclick="setFilter('animation', this)">动画</button>
   </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none;">没有匹配的项目</div>
+
   <div class="foot">
-    <a href="https://github.com/Zzz9191-stu/zxz1" style="color:#9AA39e; text-decoration:none;">github.com/Zzz9191-stu/zxz1</a>
+    <a href="https://github.com/Zzz9191-stu/zxz1">github.com/Zzz9191-stu/zxz1</a>
   </div>
 </div>
+
+<script>
+/* ============================================
+   项目列表 —— 以后加项目只需要在这里加一行
+   ============================================ */
+const projects = [
+  {
+    name: '媒体库管理系统',
+    desc: '图书 / 视频 / 图画的增删改查、统计与本地存储',
+    href: 'media-library.html',
+    cat: 'tool',
+    color: '#2D5A4A',
+    bg: '#E3EBE6',
+    icon: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>'
+  },
+  {
+    name: '画板涂鸦板',
+    desc: '选色、粗细、橡皮擦、保存 PNG',
+    href: 'sketch-board.html',
+    cat: 'tool',
+    color: '#D96C3F',
+    bg: '#FBE9DF',
+    icon: '<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/>'
+  },
+  {
+    name: '实时时钟',
+    desc: '大字体时钟，昼夜自动换肤',
+    href: 'clock.html',
+    cat: 'tool',
+    color: '#3A4A6B',
+    bg: '#E8ECF5',
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+  },
+  {
+    name: '黑客帝国数字雨',
+    desc: 'Canvas 字符流，鼠标划过扰动',
+    href: 'matrix-rain.html',
+    cat: 'animation',
+    color: '#1F7A3D',
+    bg: '#E0F5E5',
+    icon: '<path d="M7 4v16M12 4v16M17 4v16"/><path d="M7 8h.01M7 12h.01M12 10h.01M12 14h.01M17 6h.01M17 12h.01M17 16h.01"/>'
+  },
+  {
+    name: '鹈鹕扛车跑',
+    desc: 'SVG 2D 动画小剧场',
+    href: 'pelican.html',
+    cat: 'animation',
+    color: '#B8862E',
+    bg: '#F7EEDB',
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+  },
+];
+
+let currentFilter = 'all';
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const kw = document.getElementById('search').value.trim().toLowerCase();
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const list = projects.filter(p => {
+    if (currentFilter !== 'all' && p.cat !== currentFilter) return false;
+    if (kw && !(p.name.toLowerCase().includes(kw) || p.desc.toLowerCase().includes(kw))) return false;
+    return true;
+  });
+  grid.innerHTML = list.map(p => `
+    <a class="card" href="${p.href}">
+      <div class="icon" style="background:${p.bg}; color:${p.color};">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p.icon}</svg>
+      </div>
+      <div class="name">${p.name}</div>
+      <div class="desc">${p.desc}</div>
+      <div class="meta">
+        <span class="tag ${p.cat}">${p.cat === 'tool' ? '工具' : '动画'}</span>
+        <span class="go">→</span>
+      </div>
+    </a>
+  `).join('');
+  empty.style.display = list.length ? 'none' : 'block';
+}
+
+render();
+</script>
 </body>
 </html>
