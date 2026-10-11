@@ -17,3 +17,6 @@ pics.txt
 # 系统
 .DS_Store
 Thumbs.db
+
+# 截图过程文件
+_shots/
