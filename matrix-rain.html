@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黑客帝国数字雨</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23000'/%3E%3Ctext x='12' y='17' text-anchor='middle' fill='%230F0' font-size='14' font-family='monospace'%3E%E9%9B%B7%3C/text%3E%3C/svg%3E">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; background:#000; }
+canvas { display:block; }
+.ui {
+  position:fixed; top:24px; left:50%; transform:translateX(-50%);
+  text-align:center; color:#00FF41; z-index:10; pointer-events:none;
+  font-family:"Courier New", monospace;
+}
+.ui h1 {
+  font-size:28px; letter-spacing:8px; font-weight:700;
+  text-shadow:0 0 12px #00FF41, 0 0 30px rgba(0,255,65,.5);
+}
+.ui p { font-size:12px; margin-top:6px; opacity:.7; letter-spacing:2px; }
+.controls {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+  display:flex; gap:10px; z-index:10;
+}
+.controls button {
+  background:rgba(0,255,65,.1); color:#00FF41;
+  border:1px solid #00FF41; padding:8px 18px;
+  font-family:"Courier New", monospace; font-size:12px;
+  letter-spacing:2px; cursor:pointer; border-radius:4px;
+  transition:all .15s;
+}
+.controls button:hover { background:#00FF41; color:#000; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="ui">
+  <h1>MATRIX</h1>
+  <p>移动鼠标扰动字符流 · 点击按钮控制</p>
+</div>
+<div class="controls">
+  <button id="btn-toggle">暂停</button>
+  <button id="btn-reset">重置</button>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, cols, drops, speeds;
+const fontSize = 16;
+const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ZξΨΦΞ'.split('');
+let mouse = { x: -9999, y: -9999 };
+let paused = false;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cols = Math.floor(W / fontSize);
+  drops = Array(cols).fill(0).map(() => Math.random() * -100);
+  speeds = Array(cols).fill(0).map(() => 0.5 + Math.random() * 1.5);
+}
+window.addEventListener('resize', resize);
+window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.font = fontSize + 'px monospace';
+
+  for (let i = 0; i < cols; i++) {
+    const x = i * fontSize;
+    const y = drops[i] * fontSize;
+    const ch = chars[Math.floor(Math.random() * chars.length)];
+
+    // 鼠标扰动：靠近鼠标的字符变亮、变快
+    const dx = x - mouse.x, dy = y - mouse.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    let brightness = '#0F0';
+    let speed = speeds[i];
+    if (dist < 120) {
+      brightness = '#FFF';
+      speed *= 2.5;
+    } else if (dist < 240) {
+      brightness = '#8FFF8F';
+    }
+    ctx.fillStyle = brightness;
+    ctx.fillText(ch, x, y);
+
+    if (!paused) drops[i] += speed;
+    if (y > H && Math.random() > 0.975) drops[i] = 0;
+  }
+  requestAnimationFrame(draw);
+}
+
+document.getElementById('btn-toggle').addEventListener('click', function() {
+  paused = !paused;
+  this.textContent = paused ? '继续' : '暂停';
+});
+document.getElementById('btn-reset').addEventListener('click', resize);
+
+resize();
+draw();
+</script>
+</body>
+</html>

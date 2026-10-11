@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实时时钟</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%232D5A4A'/%3E%3Ctext x='12' y='16' text-anchor='middle' fill='white' font-size='10'%3E12%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Noto Sans SC', sans-serif;
+  transition: background 1.2s ease, color 1.2s ease;
+}
+body.day { background:#F5F3EE; color:#1C2321; }
+body.night { background:#0F1A2E; color:#E8ECF5; }
+.wrap { text-align:center; padding:20px; }
+.period {
+  font-size:14px; letter-spacing:6px; margin-bottom:10px;
+  opacity:.6; font-weight:300;
+}
+.time {
+  font-family:'Noto Serif SC', serif;
+  font-size: clamp(60px, 14vw, 160px);
+  font-weight:900;
+  line-height:1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing:4px;
+}
+.time .sec {
+  font-size: .35em;
+  font-weight:400;
+  opacity:.5;
+  margin-left:8px;
+}
+.date {
+  margin-top:18px;
+  font-size: clamp(14px, 2vw, 20px);
+  font-weight:300;
+  letter-spacing:3px;
+  opacity:.7;
+}
+.weekday {
+  margin-top:6px;
+  font-size:13px;
+  letter-spacing:4px;
+  opacity:.45;
+}
+.divider {
+  width:60px; height:1px; margin:24px auto;
+  background: currentColor; opacity:.3;
+}
+.tip {
+  font-size:11px; opacity:.35; margin-top:30px; letter-spacing:2px;
+}
+</style>
+</head>
+<body class="day">
+<div class="wrap">
+  <div class="period" id="period">上午</div>
+  <div class="time">
+    <span id="hh">00</span>:<span id="mm">00</span><span class="sec" id="ss">00</span>
+  </div>
+  <div class="divider"></div>
+  <div class="date" id="date">----年--月--日</div>
+  <div class="weekday" id="weekday">星期-</div>
+  <div class="tip">根据真实时间自动切换白天 / 黑夜模式</div>
+</div>
+<script>
+const weekMap = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+function pad(n) { return String(n).padStart(2, '0'); }
+function tick() {
+  const now = new Date();
+  const h = now.getHours();
+  document.getElementById('hh').textContent = pad(h);
+  document.getElementById('mm').textContent = pad(now.getMinutes());
+  document.getElementById('ss').textContent = pad(now.getSeconds());
+  document.getElementById('date').textContent =
+    `${now.getFullYear()}年${pad(now.getMonth()+1)}月${pad(now.getDate())}日`;
+  document.getElementById('weekday').textContent = weekMap[now.getDay()];
+
+  let period;
+  if (h < 6) period = '凌晨';
+  else if (h < 9) period = '早上';
+  else if (h < 12) period = '上午';
+  else if (h < 14) period = '中午';
+  else if (h < 18) period = '下午';
+  else if (h < 22) period = '晚上';
+  else period = '深夜';
+  document.getElementById('period').textContent = period;
+
+  // 18:00 - 6:00 黑夜，其他白天
+  const isNight = (h >= 18 || h < 6);
+  document.body.className = isNight ? 'night' : 'day';
+}
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>画板涂鸦板</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23D96C3F'/%3E%3Ctext x='12' y='17' text-anchor='middle' fill='white' font-size='12'%3E%E7%94%BB%3C/text%3E%3C/svg%3E">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+  background:#F5F3EE; color:#1C2321;
+  display:flex; flex-direction:column; height:100vh;
+}
+.toolbar {
+  display:flex; align-items:center; gap:14px;
+  padding:12px 20px; background:#fff;
+  border-bottom:1px solid #E2DED3; flex-wrap:wrap;
+}
+.toolbar .group {
+  display:flex; align-items:center; gap:8px;
+  padding-right:14px; border-right:1px solid #E2DED3;
+}
+.toolbar .group:last-child { border:none; }
+.color-swatch {
+  width:26px; height:26px; border-radius:50%;
+  cursor:pointer; border:2px solid transparent;
+  transition:transform .1s, border-color .1s;
+}
+.color-swatch:hover { transform:scale(1.15); }
+.color-swatch.active { border-color:#1C2321; transform:scale(1.2); }
+input[type="range"] { width:100px; }
+.btn {
+  padding:8px 14px; border:1px solid #E2DED3; background:#fff;
+  border-radius:6px; cursor:pointer; font-size:13px;
+  font-family:inherit; transition:all .1s;
+}
+.btn:hover { background:#F5F3EE; }
+.btn.primary { background:#2D5A4A; color:#fff; border-color:#2D5A4A; }
+.btn.primary:hover { background:#1F4236; }
+.canvas-wrap { flex:1; position:relative; overflow:hidden; }
+canvas {
+  position:absolute; top:0; left:0;
+  background:#fff; cursor:crosshair;
+}
+.label { font-size:12px; color:#5A6560; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="group" id="colors">
+    <div class="color-swatch active" style="background:#1C2321" data-color="#1C2321"></div>
+    <div class="color-swatch" style="background:#D96C3F" data-color="#D96C3F"></div>
+    <div class="color-swatch" style="background:#2D5A4A" data-color="#2D5A4A"></div>
+    <div class="color-swatch" style="background:#3A6B8C" data-color="#3A6B8C"></div>
+    <div class="color-swatch" style="background:#B8862E" data-color="#B8862E"></div>
+    <div class="color-swatch" style="background:#B33A3A" data-color="#B33A3A"></div>
+  </div>
+  <div class="group">
+    <span class="label">粗细</span>
+    <input type="range" id="size" min="1" max="40" value="4">
+    <span class="label" id="size-label">4px</span>
+  </div>
+  <div class="group">
+    <button class="btn" id="btn-eraser">橡皮擦</button>
+    <button class="btn" id="btn-clear">清空</button>
+    <button class="btn primary" id="btn-save">保存 PNG</button>
+  </div>
+</div>
+<div class="canvas-wrap"><canvas id="board"></canvas></div>
+<script>
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let currentColor = '#1C2321';
+let currentSize = 4;
+let eraser = false;
+
+function resize() {
+  const wrap = canvas.parentElement;
+  // 保留当前画布内容
+  const tmp = document.createElement('canvas');
+  tmp.width = canvas.width; tmp.height = canvas.height;
+  tmp.getContext('2d').drawImage(canvas, 0, 0);
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (tmp.width) ctx.drawImage(tmp, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+document.querySelectorAll('.color-swatch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    document.querySelectorAll('.color-swatch').forEach(x => x.classList.remove('active'));
+    sw.classList.add('active');
+    currentColor = sw.dataset.color;
+    eraser = false;
+  });
+});
+document.getElementById('size').addEventListener('input', function() {
+  currentSize = +this.value;
+  document.getElementById('size-label').textContent = currentSize + 'px';
+});
+document.getElementById('btn-eraser').addEventListener('click', function() {
+  eraser = !eraser;
+  this.style.background = eraser ? '#2D5A4A' : '#fff';
+  this.style.color = eraser ? '#fff' : '#1C2321';
+});
+document.getElementById('btn-clear').addEventListener('click', () => {
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+});
+document.getElementById('btn-save').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.download = `drawing-${Date.now()}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+});
+
+function pos(e) {
+  const r = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - r.left, y: t.clientY - r.top };
+}
+function start(e) {
+  drawing = true;
+  const p = pos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+}
+function move(e) {
+  if (!drawing) return;
+  const p = pos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.strokeStyle = eraser ? '#fff' : currentColor;
+  ctx.lineWidth = eraser ? currentSize * 3 : currentSize;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+  e.preventDefault();
+}
+function end() { drawing = false; }
+
+canvas.addEventListener('mousedown', start);
+canvas.addEventListener('mousemove', move);
+window.addEventListener('mouseup', end);
+canvas.addEventListener('touchstart', start);
+canvas.addEventListener('touchmove', move);
+window.addEventListener('touchend', end);
+</script>
+</body>
+</html>
